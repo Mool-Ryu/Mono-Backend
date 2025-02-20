@@ -1,7 +1,7 @@
 package com.logistics.moolryu.global.security.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -72,17 +72,13 @@ public class JwtUtil {
 	}
 
 	public void addJwtToCookie(String token, HttpServletResponse response) {
-		try {
-			token = URLEncoder.encode(token, "utf-8").replaceAll("\\+", "%20");
+		token = URLEncoder.encode(token, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
 
-			Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token);
-			cookie.setPath("/");
+		Cookie cookie = new Cookie(AUTHORIZATION_HEADER, token);
+		cookie.setPath("/");
 
-			response.addCookie(cookie);
-			response.setHeader("ACCESS_TOKEN", token);
-		} catch (UnsupportedEncodingException e) {
-			log.error(e.getMessage());
-		}
+		response.addCookie(cookie);
+		response.setHeader("ACCESS_TOKEN", token);
 	}
 
 	public String substringToken(String tokenValue) {
