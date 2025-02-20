@@ -1,3 +1,6 @@
 spring:
   application:
     name: Mool-Ryu
+
+  profiles:
+    include: datasource, jwt
