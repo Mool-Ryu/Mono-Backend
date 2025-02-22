@@ -9,7 +9,6 @@ import com.logistics.moolryu.domains.user.entity.User;
 import com.logistics.moolryu.domains.user.repository.UserRepository;
 import com.logistics.moolryu.global.exception.CustomException;
 import com.logistics.moolryu.global.exception.ErrorCode;
-import com.logistics.moolryu.global.security.user.UserRoleEnum;
 import com.logistics.moolryu.global.security.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -29,12 +28,10 @@ public class UserService {
 
 		String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-		User user = User.builder()
-			.username(requestDto.getUsername())
-			.password(encodedPassword)
-			.nickName(requestDto.getNickname())
-			.role(UserRoleEnum.USER)
-			.build();
+		User user = User.createUser(
+				requestDto.getUsername(),
+				encodedPassword,
+				requestDto.getNickname());
 
 		userRepository.save(user);
 	}
