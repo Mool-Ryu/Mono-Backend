@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ${MONO_DB_URL}
+    username: ${MONO_DB_USER}
+    password: ${MONO_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    open-in-view: false
