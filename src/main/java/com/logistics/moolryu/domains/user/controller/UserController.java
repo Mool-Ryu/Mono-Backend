@@ -11,6 +11,7 @@ import com.logistics.moolryu.domains.user.controller.dto.LogInRequestDto;
 import com.logistics.moolryu.domains.user.controller.dto.SignUpRequestDto;
 import com.logistics.moolryu.domains.user.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,7 +23,7 @@ public class UserController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<String> signUp(
-		@RequestBody SignUpRequestDto requestDto
+		@Valid @RequestBody SignUpRequestDto requestDto
 	) {
 		userService.signUp(requestDto);
 		return ResponseEntity.ok("회원 가입 완료");
