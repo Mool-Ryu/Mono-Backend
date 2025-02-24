@@ -1,13 +1,17 @@
 package com.logistics.moolryu.domains.product.entity;
 
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
+import com.logistics.moolryu.domains.user.entity.User;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -42,13 +46,18 @@ public class Product {
 	@Column(name = "product_status", nullable = false)
 	private ProductStatus productStatus;
 
-	public static Product create(String name, String description, int price, int quantity){
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+
+	public static Product create(String name, String description, int price, int quantity, User user){
 		return Product.builder()
 			.name(name)
 			.description(description)
 			.price(price)
 			.quantity(quantity)
 			.productStatus(ProductStatus.AVAILABLE)
+			.user(user)
 			.build();
 	}
 
