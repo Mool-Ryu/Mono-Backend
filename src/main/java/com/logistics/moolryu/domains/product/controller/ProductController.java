@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
+import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
@@ -62,4 +64,20 @@ public class ProductController {
 				)
 			);
 	}
+
+	@GetMapping("/{productId}")
+	public ResponseEntity<SuccessResponseDto<ProductSearchDetailResponseDto>> searchDetailProduct(
+		@PathVariable Long productId
+	){
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				SuccessResponseDto.success(
+					"물품 단건 조회 성공",
+					productService.searchDetailProduct(productId)
+				)
+			);
+
+	}
+
+
 }

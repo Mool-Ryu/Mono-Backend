@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
+import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.entity.Product;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
@@ -53,6 +54,18 @@ public class ProductService {
 		ProductSortOption productSortOption
 	){
 		return productQueryRepository.SearchProduct(pageable, productName, productStatus, productSortOption);
+	}
+
+	@Transactional(readOnly = true)
+	public ProductSearchDetailResponseDto searchDetailProduct(Long productId){
+		Product product = findById(productId);
+		return ProductSearchDetailResponseDto.from(product);
+	}
+
+	private Product findById(Long productId){
+		return productJpaRepository.findById(productId).orElseThrow(
+			() -> new CustomException(ErrorCode.TIMEOUT_ERROR)
+		);
 	}
 
 
