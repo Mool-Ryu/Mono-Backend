@@ -1,40 +1,64 @@
 package com.logistics.moolryu.domains.product.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
-import com.logistics.moolryu.domains.product.entity.Product;
+import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
+import com.logistics.moolryu.domains.product.enums.ProductSortOption;
+import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.product.service.ProductService;
 import com.logistics.moolryu.global.dto.SuccessResponseDto;
+import com.logistics.moolryu.global.security.user.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/products")
+@RequestMapping("/api/products")
 public class ProductController {
 
 	private final ProductService productService;
 
-	@PostMapping()
+	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PostMapping
 	public ResponseEntity<SuccessResponseDto<ProductCreateResponseDto>> createProduct(
-		@RequestBody ProductCreateRequestDto request
-	){
-		// TODO: 2025-02-22 User 추가 예정
+		@RequestBody ProductCreateRequestDto request,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	) {
 
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
 				SuccessResponseDto.success(
 					"물품 등록 성공",
-					productService.createProduct(request)
+					productService.createProduct(request, userDetails.getUser())
+				)
+			);
+	}
+
+	@GetMapping
+	public ResponseEntity<SuccessResponseDto<Page<ProductSearchResponseDto>>> searchProduct(
+		Pageable pageable,
+		@RequestParam String productName,
+		@RequestParam ProductStatus productStatus,
+		@RequestParam ProductSortOption productSortOption
+	) {
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				SuccessResponseDto.success(
+					"물품 전체 조회 성공",
+					productService.searchProduct(pageable, productName, productStatus, productSortOption)
 				)
 			);
 	}

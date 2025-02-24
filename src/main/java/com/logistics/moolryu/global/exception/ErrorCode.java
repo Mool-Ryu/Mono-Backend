@@ -13,6 +13,7 @@ public enum ErrorCode {
 	INVALID_USERID(400, "유효하지않은 유저ID입니다."),
 	INVALID_PASSWORD(400, "비밀번호가 일치하지 않습니다."),
 	ALREADY_EXISTS_USER(400, "이미 존재하는 사용자입니다."),
+	ALREADY_EXISTS_PRODUCT(400, "이미 존재하는 물품입니다."),
 
 	/*  401 UNAUTHORIZED : 인증 안됨  */
 	UNAUTHORIZED(401, "인증되지 않았습니다."),
