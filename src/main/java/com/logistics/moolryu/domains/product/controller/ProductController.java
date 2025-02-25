@@ -20,6 +20,8 @@ import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
+import com.logistics.moolryu.domains.product.dto.StockOrderRequestDto;
+import com.logistics.moolryu.domains.product.dto.StockOrderResponseDto;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.product.service.ProductService;
@@ -42,7 +44,7 @@ public class ProductController {
 		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
 
-		return ResponseEntity.status(HttpStatus.OK)
+		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(
 				SuccessResponseDto.success(
 					"물품 등록 성공",
@@ -54,9 +56,9 @@ public class ProductController {
 	@GetMapping
 	public ResponseEntity<SuccessResponseDto<Page<ProductSearchResponseDto>>> searchProduct(
 		Pageable pageable,
-		@RequestParam String productName,
-		@RequestParam ProductStatus productStatus,
-		@RequestParam ProductSortOption productSortOption
+		@RequestParam(required = false) String productName,
+		@RequestParam(required = false) ProductStatus productStatus,
+		@RequestParam(required = false) ProductSortOption productSortOption
 	) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
@@ -70,7 +72,7 @@ public class ProductController {
 	@GetMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<ProductSearchDetailResponseDto>> searchDetailProduct(
 		@PathVariable Long productId
-	){
+	) {
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
 				SuccessResponseDto.success(
@@ -81,14 +83,13 @@ public class ProductController {
 
 	}
 
-
 	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
 	@PatchMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<Void>> updateProduct(
 		@PathVariable Long productId,
 		@RequestBody ProductUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails
-	){
+	) {
 		productService.updateProduct(productId, requestDto, userDetails.getUser());
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
@@ -99,8 +100,21 @@ public class ProductController {
 
 	}
 
-
-
-
+	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PostMapping("/{productId}")
+	public ResponseEntity<SuccessResponseDto<StockOrderResponseDto>> createOrderStock(
+		@PathVariable Long productId,
+		@RequestBody StockOrderRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	) {
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(
+				SuccessResponseDto.success(
+					"재고 추가 요청 성공",
+					productService.createStockOrder(productId, requestDto, userDetails.getUser()
+					)
+				)
+			);
+	}
 
 }

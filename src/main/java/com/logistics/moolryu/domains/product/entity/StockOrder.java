@@ -24,8 +24,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@Table(name = "p_stoke_request")
-public class StockRequest extends BaseTime {
+@Table(name = "p_stock_order")
+public class StockOrder extends BaseTime {
 
 	@Id
 	@Tsid
@@ -41,6 +41,15 @@ public class StockRequest extends BaseTime {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private StokeRequestStatus status;
+
+
+	public static StockOrder create(Integer requestQuantity, Product product){
+		return StockOrder.builder()
+			.requestQuantity(requestQuantity)
+			.product(product)
+			.status(StokeRequestStatus.PENDING)
+			.build();
+	}
 
 
 

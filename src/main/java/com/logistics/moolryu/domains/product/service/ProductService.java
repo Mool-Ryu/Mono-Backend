@@ -10,11 +10,15 @@ import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
+import com.logistics.moolryu.domains.product.dto.StockOrderRequestDto;
+import com.logistics.moolryu.domains.product.dto.StockOrderResponseDto;
 import com.logistics.moolryu.domains.product.entity.Product;
+import com.logistics.moolryu.domains.product.entity.StockOrder;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.product.repository.ProductJpaRepository;
 import com.logistics.moolryu.domains.product.repository.ProductQueryRepository;
+import com.logistics.moolryu.domains.product.repository.StockOrderJpaRepository;
 import com.logistics.moolryu.domains.user.entity.User;
 import com.logistics.moolryu.global.exception.CustomException;
 import com.logistics.moolryu.global.exception.ErrorCode;
@@ -27,6 +31,7 @@ public class ProductService {
 
 	private final ProductJpaRepository productJpaRepository;
 	private final ProductQueryRepository productQueryRepository;
+	private final StockOrderJpaRepository stockOrderJpaRepository;
 
 	@Transactional
 	public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto, User user) {
@@ -75,6 +80,18 @@ public class ProductService {
 			requestDto.getPrice()
 		);
 	}
+
+	@Transactional
+	public StockOrderResponseDto createStockOrder(Long productId, StockOrderRequestDto requestDto, User user){
+		Product product = findByIdAndUser(productId, user);
+
+		StockOrder stockOrder = StockOrder.create(requestDto.getRequestQuantity(), product);
+
+		stockOrder = stockOrderJpaRepository.save(stockOrder);
+
+		return StockOrderResponseDto.from(stockOrder);
+	}
+
 
 
 	private Product findById(Long productId){
