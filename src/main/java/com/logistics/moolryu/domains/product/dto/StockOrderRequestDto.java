@@ -7,6 +7,8 @@ public class StockOrderRequestDto {
 
 	private int requestQuantity;
 
+	private Long userId;
+
 
 
 }

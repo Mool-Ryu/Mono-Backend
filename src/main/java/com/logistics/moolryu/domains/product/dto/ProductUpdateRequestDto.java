@@ -13,4 +13,6 @@ public class ProductUpdateRequestDto {
 	private Integer price;
 
 	private ProductStatus productStatus;
+
+	private Long userId;
 }

@@ -2,6 +2,7 @@ package com.logistics.moolryu.domains.product.entity;
 
 import com.logistics.moolryu.domains.common.entity.BaseTime;
 import com.logistics.moolryu.domains.product.enums.StokeRequestStatus;
+import com.logistics.moolryu.domains.user.entity.User;
 
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
@@ -42,6 +43,9 @@ public class StockOrder extends BaseTime {
 	@Column(name = "status", nullable = false)
 	private StokeRequestStatus status;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 	public static StockOrder create(Integer requestQuantity, Product product){
 		return StockOrder.builder()

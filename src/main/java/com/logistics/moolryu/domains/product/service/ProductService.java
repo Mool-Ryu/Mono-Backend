@@ -20,6 +20,7 @@ import com.logistics.moolryu.domains.product.repository.ProductJpaRepository;
 import com.logistics.moolryu.domains.product.repository.ProductQueryRepository;
 import com.logistics.moolryu.domains.product.repository.StockOrderJpaRepository;
 import com.logistics.moolryu.domains.user.entity.User;
+import com.logistics.moolryu.domains.user.repository.UserRepository;
 import com.logistics.moolryu.global.exception.CustomException;
 import com.logistics.moolryu.global.exception.ErrorCode;
 
@@ -32,9 +33,12 @@ public class ProductService {
 	private final ProductJpaRepository productJpaRepository;
 	private final ProductQueryRepository productQueryRepository;
 	private final StockOrderJpaRepository stockOrderJpaRepository;
+	private final UserRepository userRepository;
 
 	@Transactional
-	public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto, User user) {
+	public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto) {
+
+		User user = findByUser(requestDto.getUserId());
 
 		validateProduct(requestDto.getProductName(), user);
 
@@ -69,8 +73,9 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void updateProduct(Long productId, ProductUpdateRequestDto requestDto, User user){
+	public void updateProduct(Long productId, ProductUpdateRequestDto requestDto){
 
+		User user = findByUser(requestDto.getUserId());
 		Product product = findByIdAndUser(productId, user);
 
 		product.update(
@@ -82,7 +87,9 @@ public class ProductService {
 	}
 
 	@Transactional
-	public StockOrderResponseDto createStockOrder(Long productId, StockOrderRequestDto requestDto, User user){
+	public StockOrderResponseDto createStockOrder(Long productId, StockOrderRequestDto requestDto){
+		User user = findByUser(requestDto.getUserId());
+
 		Product product = findByIdAndUser(productId, user);
 
 		StockOrder stockOrder = StockOrder.create(requestDto.getRequestQuantity(), product);
@@ -111,6 +118,12 @@ public class ProductService {
 		if(productJpaRepository.existsByNameAndUser(productName, user)){
 			throw new CustomException(ErrorCode.ALREADY_EXISTS_PRODUCT);
 		}
+	}
+
+	private User findByUser(Long userId){
+		return userRepository.findById(userId).orElseThrow(
+			() -> new CustomException(ErrorCode.USER_NOT_FOUND)
+		);
 	}
 
 

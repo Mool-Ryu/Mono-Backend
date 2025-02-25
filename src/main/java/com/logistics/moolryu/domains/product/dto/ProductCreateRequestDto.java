@@ -1,8 +1,6 @@
 package com.logistics.moolryu.domains.product.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 
 @Getter
@@ -15,5 +13,7 @@ public class ProductCreateRequestDto {
 	private int price;
 
 	private int quantity;
+
+	private Long userId;
 
 }
