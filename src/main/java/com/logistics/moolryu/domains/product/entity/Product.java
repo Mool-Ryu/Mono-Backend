@@ -1,5 +1,6 @@
 package com.logistics.moolryu.domains.product.entity;
 
+import com.logistics.moolryu.domains.common.entity.BaseTime;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.user.entity.User;
 
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Table(name = "p_product")
-public class Product {
+public class Product extends BaseTime {
 	@Tsid
 	@Id
 	private Long id;
@@ -60,6 +61,23 @@ public class Product {
 			.user(user)
 			.build();
 	}
+
+	public void update(String productName, String description, ProductStatus productStatus, Integer price){
+		if(productName != null){
+			this.name = productName;
+		}
+		if(description != null){
+			this.description = description;
+		}
+		if(productStatus != null){
+			this.productStatus = productStatus;
+		}
+		if(price != null){
+			this.price = price;
+		}
+
+	}
+
 
 
 
