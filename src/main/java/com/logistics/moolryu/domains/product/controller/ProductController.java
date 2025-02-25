@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,7 @@ import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
+import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.product.service.ProductService;
@@ -78,6 +80,27 @@ public class ProductController {
 			);
 
 	}
+
+
+	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PatchMapping("/{productId}")
+	public ResponseEntity<SuccessResponseDto<Void>> updateProduct(
+		@PathVariable Long productId,
+		@RequestBody ProductUpdateRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	){
+		productService.updateProduct(productId, requestDto, userDetails.getUser());
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				SuccessResponseDto.success(
+					"물품 수정 성공"
+				)
+			);
+
+	}
+
+
+
 
 
 }

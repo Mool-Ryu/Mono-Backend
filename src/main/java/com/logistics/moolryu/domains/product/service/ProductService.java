@@ -9,6 +9,7 @@ import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
+import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
 import com.logistics.moolryu.domains.product.entity.Product;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
@@ -62,9 +63,29 @@ public class ProductService {
 		return ProductSearchDetailResponseDto.from(product);
 	}
 
+	@Transactional
+	public void updateProduct(Long productId, ProductUpdateRequestDto requestDto, User user){
+
+		Product product = findByIdAndUser(productId, user);
+
+		product.update(
+			requestDto.getProductName(),
+			requestDto.getDescription(),
+			requestDto.getProductStatus(),
+			requestDto.getPrice()
+		);
+	}
+
+
 	private Product findById(Long productId){
 		return productJpaRepository.findById(productId).orElseThrow(
-			() -> new CustomException(ErrorCode.TIMEOUT_ERROR)
+			() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT)
+		);
+	}
+
+	private Product findByIdAndUser(Long productId, User user){
+		return productJpaRepository.findByIdAndUser(productId, user).orElseThrow(
+			() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT)
 		);
 	}
 
@@ -74,5 +95,6 @@ public class ProductService {
 			throw new CustomException(ErrorCode.ALREADY_EXISTS_PRODUCT);
 		}
 	}
+
 
 }
