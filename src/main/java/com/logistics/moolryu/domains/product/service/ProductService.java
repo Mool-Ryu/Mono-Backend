@@ -36,21 +36,23 @@ public class ProductService {
 	private final UserRepository userRepository;
 
 	@Transactional
-	public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto) {
+	public ProductCreateResponseDto createProduct(ProductCreateRequestDto requestDto, User user) {
 
-		User user = findByUser(requestDto.getUserId());
+		User registrant = findByUser(requestDto.getUserId());
 
-		validateProduct(requestDto.getProductName(), user);
+		validateProduct(requestDto.getProductName(), registrant);
 
 		Product product = Product.create(
 			requestDto.getProductName(),
 			requestDto.getDescription(),
 			requestDto.getPrice(),
 			requestDto.getQuantity(),
-			user
+			registrant
 		);
 
 		product = productJpaRepository.save(product);
+
+		product.setCreateBy(user);
 
 		return ProductCreateResponseDto.from(product);
 
@@ -73,10 +75,10 @@ public class ProductService {
 	}
 
 	@Transactional
-	public void updateProduct(Long productId, ProductUpdateRequestDto requestDto){
+	public void updateProduct(Long productId, ProductUpdateRequestDto requestDto, User user){
 
-		User user = findByUser(requestDto.getUserId());
-		Product product = findByIdAndUser(productId, user);
+		User registrant = findByUser(requestDto.getUserId());
+		Product product = findByIdAndUser(productId, registrant);
 
 		product.update(
 			requestDto.getProductName(),
@@ -84,17 +86,23 @@ public class ProductService {
 			requestDto.getProductStatus(),
 			requestDto.getPrice()
 		);
+
+		product.setUpdateBy(user);
+
+
 	}
 
 	@Transactional
-	public StockOrderResponseDto createStockOrder(Long productId, StockOrderRequestDto requestDto){
-		User user = findByUser(requestDto.getUserId());
+	public StockOrderResponseDto createStockOrder(Long productId, StockOrderRequestDto requestDto, User user){
+		User registrant = findByUser(requestDto.getUserId());
 
-		Product product = findByIdAndUser(productId, user);
+		Product product = findByIdAndUser(productId, registrant);
 
 		StockOrder stockOrder = StockOrder.create(requestDto.getRequestQuantity(), product);
 
 		stockOrder = stockOrderJpaRepository.save(stockOrder);
+
+		stockOrder.setCreateByAndUpdateBy(user);
 
 		return StockOrderResponseDto.from(stockOrder);
 	}

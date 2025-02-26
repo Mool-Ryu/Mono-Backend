@@ -62,6 +62,14 @@ public class Product extends BaseTime {
 			.build();
 	}
 
+	public void setCreateBy(User user){
+		setCreatedBy(user.getId());
+	}
+
+	public void setUpdateBy(User user){
+		setUpdatedBy(user.getId());
+	}
+
 	public void update(String productName, String description, ProductStatus productStatus, Integer price){
 		if(productName != null){
 			this.name = productName;

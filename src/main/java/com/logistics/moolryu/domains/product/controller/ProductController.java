@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import com.logistics.moolryu.domains.product.enums.ProductSortOption;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.product.service.ProductService;
 import com.logistics.moolryu.global.dto.SuccessResponseDto;
+import com.logistics.moolryu.global.security.user.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,14 +40,15 @@ public class ProductController {
 	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
 	@PostMapping
 	public ResponseEntity<SuccessResponseDto<ProductCreateResponseDto>> createProduct(
-		@RequestBody ProductCreateRequestDto request
+		@RequestBody ProductCreateRequestDto request,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
 
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(
 				SuccessResponseDto.success(
 					"물품 등록 성공",
-					productService.createProduct(request)
+					productService.createProduct(request, userDetails.getUser())
 				)
 			);
 	}
@@ -84,9 +87,10 @@ public class ProductController {
 	@PatchMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<Void>> updateProduct(
 		@PathVariable Long productId,
-		@RequestBody ProductUpdateRequestDto requestDto
+		@RequestBody ProductUpdateRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
-		productService.updateProduct(productId, requestDto);
+		productService.updateProduct(productId, requestDto, userDetails.getUser());
 		return ResponseEntity.status(HttpStatus.OK)
 			.body(
 				SuccessResponseDto.success(
@@ -100,13 +104,14 @@ public class ProductController {
 	@PostMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<StockOrderResponseDto>> createOrderStock(
 		@PathVariable Long productId,
-		@RequestBody StockOrderRequestDto requestDto
+		@RequestBody StockOrderRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(
 				SuccessResponseDto.success(
 					"재고 추가 요청 성공",
-					productService.createStockOrder(productId, requestDto)
+					productService.createStockOrder(productId, requestDto, userDetails.getUser())
 				)
 			);
 	}

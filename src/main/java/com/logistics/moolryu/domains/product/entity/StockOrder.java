@@ -55,8 +55,14 @@ public class StockOrder extends BaseTime {
 			.build();
 	}
 
+	public void updateStatus(){
+		this.status = StokeRequestStatus.PROCESSED;
+	}
 
-
+	public void setCreateByAndUpdateBy(User user){
+		setCreatedBy(user.getId());
+		setUpdatedBy(user.getId());
+	}
 
 
 }
