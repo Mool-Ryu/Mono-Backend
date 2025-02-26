@@ -1,5 +1,7 @@
 package com.logistics.moolryu.domains.product.entity;
 
+import java.time.LocalDateTime;
+
 import com.logistics.moolryu.domains.common.entity.BaseTime;
 import com.logistics.moolryu.domains.product.enums.ProductStatus;
 import com.logistics.moolryu.domains.user.entity.User;
@@ -68,6 +70,12 @@ public class Product extends BaseTime {
 
 	public void setUpdateBy(User user){
 		setUpdatedBy(user.getId());
+	}
+
+	public void setDeleteAtAndDeleteBy(User user) {
+		setDeletedAt(LocalDateTime.now());
+		setDeletedBy(user.getId());
+
 	}
 
 	public void update(String productName, String description, ProductStatus productStatus, Integer price){

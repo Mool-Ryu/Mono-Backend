@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
+import com.logistics.moolryu.domains.product.dto.ProductDeleteRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
@@ -112,6 +114,23 @@ public class ProductController {
 				SuccessResponseDto.success(
 					"재고 추가 요청 성공",
 					productService.createStockOrder(productId, requestDto, userDetails.getUser())
+				)
+			);
+	}
+
+	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@DeleteMapping("/{productId}")
+	public ResponseEntity<SuccessResponseDto<Void>> deleteProduct(
+		@PathVariable Long productId,
+		@RequestBody ProductDeleteRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	){
+
+		productService.deleteProduct(productId, requestDto, userDetails.getUser());
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				SuccessResponseDto.success(
+					"물품 삭제 성공"
 				)
 			);
 	}

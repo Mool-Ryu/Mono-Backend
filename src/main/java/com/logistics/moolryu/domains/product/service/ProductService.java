@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logistics.moolryu.domains.product.dto.ProductCreateRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductCreateResponseDto;
+import com.logistics.moolryu.domains.product.dto.ProductDeleteRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
@@ -89,6 +90,16 @@ public class ProductService {
 
 		product.setUpdateBy(user);
 
+
+	}
+
+	@Transactional
+	public void deleteProduct(Long productId, ProductDeleteRequestDto requestDto, User user){
+		User registrant = findByUser(requestDto.getUserId());
+
+		Product product = findByIdAndUser(productId, registrant);
+
+		product.setDeleteAtAndDeleteBy(user);
 
 	}
 
