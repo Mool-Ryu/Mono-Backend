@@ -22,6 +22,7 @@ import com.logistics.moolryu.domains.product.dto.ProductDeleteRequestDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchDetailResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductSearchResponseDto;
 import com.logistics.moolryu.domains.product.dto.ProductUpdateRequestDto;
+import com.logistics.moolryu.domains.product.dto.StockOrderCancelRequestDto;
 import com.logistics.moolryu.domains.product.dto.StockOrderRequestDto;
 import com.logistics.moolryu.domains.product.dto.StockOrderResponseDto;
 import com.logistics.moolryu.domains.product.enums.ProductSortOption;
@@ -30,6 +31,7 @@ import com.logistics.moolryu.domains.product.service.ProductService;
 import com.logistics.moolryu.global.dto.SuccessResponseDto;
 import com.logistics.moolryu.global.security.user.UserDetailsImpl;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -42,7 +44,7 @@ public class ProductController {
 	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
 	@PostMapping
 	public ResponseEntity<SuccessResponseDto<ProductCreateResponseDto>> createProduct(
-		@RequestBody ProductCreateRequestDto request,
+		@RequestBody @Valid ProductCreateRequestDto request,
 		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
 
@@ -89,7 +91,7 @@ public class ProductController {
 	@PatchMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<Void>> updateProduct(
 		@PathVariable Long productId,
-		@RequestBody ProductUpdateRequestDto requestDto,
+		@RequestBody @Valid ProductUpdateRequestDto requestDto,
 		@AuthenticationPrincipal UserDetailsImpl userDetails
 	) {
 		productService.updateProduct(productId, requestDto, userDetails.getUser());
@@ -100,22 +102,6 @@ public class ProductController {
 				)
 			);
 
-	}
-
-	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
-	@PostMapping("/{productId}")
-	public ResponseEntity<SuccessResponseDto<StockOrderResponseDto>> createOrderStock(
-		@PathVariable Long productId,
-		@RequestBody StockOrderRequestDto requestDto,
-		@AuthenticationPrincipal UserDetailsImpl userDetails
-	) {
-		return ResponseEntity.status(HttpStatus.CREATED)
-			.body(
-				SuccessResponseDto.success(
-					"재고 추가 요청 성공",
-					productService.createStockOrder(productId, requestDto, userDetails.getUser())
-				)
-			);
 	}
 
 	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
@@ -132,6 +118,39 @@ public class ProductController {
 				SuccessResponseDto.success(
 					"물품 삭제 성공"
 				)
+			);
+	}
+
+	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PostMapping("/{productId}")
+	public ResponseEntity<SuccessResponseDto<StockOrderResponseDto>> createOrderStock(
+		@PathVariable Long productId,
+		@RequestBody @Valid StockOrderRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	) {
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(
+				SuccessResponseDto.success(
+					"재고 추가 요청 성공",
+					productService.createStockOrder(productId, requestDto, userDetails.getUser())
+				)
+			);
+	}
+
+
+
+	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PatchMapping("/{productId}/stock-orders")
+	public ResponseEntity<SuccessResponseDto<Void>> cancelOrderStock(
+		@PathVariable Long productId,
+		@RequestBody StockOrderCancelRequestDto requestDto,
+		@AuthenticationPrincipal UserDetailsImpl userDetails
+	){
+
+		productService.cancelOrderStock(productId, requestDto, userDetails.getUser());
+		return ResponseEntity.status(HttpStatus.OK)
+			.body(
+				SuccessResponseDto.success("재고 추가 요청 취소 성공")
 			);
 	}
 
