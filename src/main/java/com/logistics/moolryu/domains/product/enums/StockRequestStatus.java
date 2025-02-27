@@ -1,6 +1,6 @@
 package com.logistics.moolryu.domains.product.enums;
 
-public enum StokeRequestStatus {
+public enum StockRequestStatus {
 	PENDING,
 
 	PROCESSED,

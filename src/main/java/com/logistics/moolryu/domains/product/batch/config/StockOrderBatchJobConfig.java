@@ -59,7 +59,7 @@ public class StockOrderBatchJobConfig {
 	@Bean
 	public ItemProcessor<StockOrder, StockOrder> stockOrderProcessor() {
 		return stockOrder -> {
-			stockOrder.updateStatus();
+			stockOrder.processStock();
 			return stockOrder;
 		};
 	}

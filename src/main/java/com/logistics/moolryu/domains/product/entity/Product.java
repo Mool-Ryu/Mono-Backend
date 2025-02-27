@@ -94,6 +94,10 @@ public class Product extends BaseTime {
 
 	}
 
+	public void addQuantity(int quantity){
+		this.quantity += quantity;
+	}
+
 
 
 
