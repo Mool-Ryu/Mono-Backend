@@ -1,4 +1,4 @@
-package com.logistics.moolryu.domains.hub.repositoy;
+package com.logistics.moolryu.domains.hub.repository;
 
 import com.logistics.moolryu.domains.hub.entity.Hub;
 import org.springframework.data.jpa.repository.JpaRepository;
