@@ -1,4 +1,4 @@
-package com.logistics.moolryu.global.security.config;
+package com.logistics.moolryu.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
