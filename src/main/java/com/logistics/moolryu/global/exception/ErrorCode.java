@@ -13,6 +13,9 @@ public enum ErrorCode {
 	INVALID_USERID(400, "유효하지않은 유저ID입니다."),
 	INVALID_PASSWORD(400, "비밀번호가 일치하지 않습니다."),
 	ALREADY_EXISTS_USER(400, "이미 존재하는 사용자입니다."),
+	ALREADY_EXISTS_PRODUCT(400, "이미 존재하는 물품입니다."),
+	INVALID_PRODUCT(400, "물품 정보가 일치하지 않습니다."),
+	INVALID_STOCK_STATUS(400, "잘못된 상태변경 입니다."),
 
 	/*  401 UNAUTHORIZED : 인증 안됨  */
 	UNAUTHORIZED(401, "인증되지 않았습니다."),
@@ -23,6 +26,8 @@ public enum ErrorCode {
 	/*  404 NOT_FOUND : Resource 권한 없음, Resource 를 찾을 수 없음  */
 	ACCESS_DENIED(404, "접근 권한이 없습니다."),
 	USER_NOT_FOUND(404, "유저를 찾을 수 없습니다."),
+	NOT_FOUND_PRODUCT(404, "물품을 찾을 수 없습니다."),
+	NOT_FOUND_STOCK_ORDER(404, "재고 추가 주문 정보를 찾을 수 없습니다."),
 
 	/*  408 REQUEST_TIMEOUT : 요청에 대한 응답 시간 초과  */
 	TIMEOUT_ERROR(408, "응답시간을 초과하였습니다."),
