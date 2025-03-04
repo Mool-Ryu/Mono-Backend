@@ -41,7 +41,7 @@ public class ProductController {
 
 	private final ProductService productService;
 
-	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER_PRODUCT')")
 	@PostMapping
 	public ResponseEntity<SuccessResponseDto<ProductCreateResponseDto>> createProduct(
 		@RequestBody @Valid ProductCreateRequestDto request,
@@ -87,7 +87,7 @@ public class ProductController {
 
 	}
 
-	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER_PRODUCT')")
 	@PatchMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<Void>> updateProduct(
 		@PathVariable Long productId,
@@ -104,7 +104,7 @@ public class ProductController {
 
 	}
 
-	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER_PRODUCT')")
 	@DeleteMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<Void>> deleteProduct(
 		@PathVariable Long productId,
@@ -121,7 +121,7 @@ public class ProductController {
 			);
 	}
 
-	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER_PRODUCT')")
 	@PostMapping("/{productId}")
 	public ResponseEntity<SuccessResponseDto<StockOrderResponseDto>> createOrderStock(
 		@PathVariable Long productId,
@@ -139,7 +139,7 @@ public class ProductController {
 
 
 
-	@PreAuthorize("hasAnyRole('MANAGER_PRODUCT')")
+	@PreAuthorize("hasAnyRole('ROLE_MANAGER_PRODUCT')")
 	@PatchMapping("/{productId}/stock-orders")
 	public ResponseEntity<SuccessResponseDto<Void>> cancelOrderStock(
 		@PathVariable Long productId,
